@@ -23,4 +23,4 @@ plugins目录下有示例插件,后续会出对应文档
 
 # 使用
 使用本机器人连接LLoneBot需要先安装LLoneBot
-安装教程见 [LLoneBot](https://github.com/xyb12345678qwe/LLoneBot)
+安装教程见 [LLoneBot](https://boke.mzbs.top/index.php/2024/07/08/%e5%ae%89%e8%a3%85llonebot/)
