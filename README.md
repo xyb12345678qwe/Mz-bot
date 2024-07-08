@@ -1,3 +1,5 @@
+# 介绍
+本框架支持LLoneBot连接ntqq
 # 开始
 gitee
 ```sh
