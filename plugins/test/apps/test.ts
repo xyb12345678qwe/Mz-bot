@@ -1,5 +1,4 @@
 import { MzPlugin,createPicture } from 'mz-botjs'
-import { AppName } from '../../../config'
 import path from 'path'
 export class help extends MzPlugin {
     constructor() {
