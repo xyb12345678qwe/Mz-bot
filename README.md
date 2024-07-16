@@ -20,7 +20,7 @@ npm run start LLOneBot
 # 一键下载脚本
 在安装机器人的目录下以git bash执行
 ```sh
-bash <(curl -sL https://gitee.com/xyb12345678qwe/mz-bot/src/sh/install.sh)
+curl -sL https://gitee.com/xyb12345678qwe/mz-bot/raw/master/src/sh/install.sh -o install.sh & sh install.sh
 ```
 # 开发
 ```sh
