@@ -18,9 +18,11 @@ npm i yarn -g
 yarn i
 npm run start 配置名(默认为test) LLOneBot ntqq
 ```
-``LLOneBot``启动无需配置，正向ws会自动连接qq
+``LLOneBot``启动无需配置，正向ws会自动连接qq,连接新框架qq,如何安装见安装教程
 
-``ntqq``是q群bot
+``ntqq``是q群bot,如何配置见文档
+
+``Lagrange``是一个连接连接新框架qq的协议，如何配置见文档
 注:启动指令是暂时的,后续会进行更改
 # 一键下载脚本
 在安装机器人的目录下以git bash执行
