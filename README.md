@@ -1,7 +1,11 @@
 # 介绍
-本框架支持LLoneBot连接qq
+本框架支持``LLoneBot``连接qq
 
-连接q群bot
+支持连接``q群bot``
+
+支持使用``早柚核心``
+
+支持使用``Lagrange``
 # 开始
 gitee
 ```sh
@@ -23,6 +27,8 @@ npm run start 配置名(默认为test) LLOneBot ntqq
 ``ntqq``是q群bot,如何配置见文档
 
 ``Lagrange``是一个连接连接新框架qq的协议，如何配置见文档
+
+
 注:启动指令是暂时的,后续会进行更改
 # 一键下载脚本
 在安装机器人的目录下以git bash执行
@@ -76,6 +82,7 @@ npm run start
 
 如需使用kook机器人,需在``GsCore发送图片``中,将``kook``图片发送改为``link``
 
+在``config/config/config.yaml``中将``GSUIDCore``改为``true``开启``早柚核心``连接
 
 # 作者
 1:名字(qq:3407318235)
