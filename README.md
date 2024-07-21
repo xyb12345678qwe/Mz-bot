@@ -6,6 +6,9 @@
 支持使用``早柚核心``
 
 支持使用``Lagrange``
+
+支持使用``kook``
+
 # 开始
 gitee
 ```sh
@@ -28,6 +31,7 @@ npm run start 配置名(默认为test) LLOneBot ntqq
 
 ``Lagrange``是一个连接连接新框架qq的协议，如何配置见文档
 
+``kook``是kook机器人
 
 注:启动指令是暂时的,后续会进行更改
 # 一键下载脚本
