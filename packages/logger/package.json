@@ -1,0 +1,28 @@
+{
+    "name": "@mz-botjs/logger",
+    "version": "0.0.1",
+    "description": "logger for mz-botjs",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "keywords": [
+        "bot",
+        "discord",
+        "mz-botjs"
+    ],
+    "author": "mz",
+    "license": "ISC",
+    "dependencies": {
+        "@koa/router": "^13.1.1",
+        "@types/log4js": "^0.0.33",
+        "koa": "^3.0.0",
+        "koa-bodyparser": "^4.4.1",
+        "log4js": "^6.9.1"
+    },
+    "private": false,
+    "publishConfig": {
+    "access": "public"
+    }
+}

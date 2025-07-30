@@ -1,0 +1,25 @@
+{
+    "name": "@mz-botjs/config",
+    "version": "0.0.1",
+    "description": "config for mz-botjs",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc"
+    },
+    "keywords": [
+        "bot",
+        "discord",
+        "mz-botjs"
+    ],
+    "author": "mz",
+    "license": "ISC",
+    "dependencies": {
+        "chokidar": "^4.0.3",
+        "zod": "^4.0.5"
+    },
+    "private": false,
+    "publishConfig": {
+    "access": "public"
+    }
+}

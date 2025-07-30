@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "ESNext",
+        "lib": ["ESNext", "DOM"],
+        "strict": false,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "baseUrl": "./src",
+        "moduleResolution": "node",
+        //生成.d.ts文件
+        "declaration": true,
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts"]  
+}
