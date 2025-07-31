@@ -49,7 +49,7 @@ export default {
 import { Text } from '@mz-botjs/core'
 
 export const help = async (ctx) => {
-  if(!isMatch(ctx.payload.UserText, /^(#|\/)?蛊界菜单$/)) return;
+  if(!isMatch(ctx.payload.UserText, /^(#|\/)?你好$/)) return;
   await ctx.payload.reply(Text('你好'));
 }
 
