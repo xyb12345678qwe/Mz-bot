@@ -1,6 +1,6 @@
 {
     "name": "@mz-botjs/adapter_onebotv11",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "private": false,
     "description": "adapter_onebotv11 for mz-botjs",
     "keywords": [

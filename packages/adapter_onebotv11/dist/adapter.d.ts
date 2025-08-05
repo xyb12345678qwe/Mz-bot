@@ -24,6 +24,10 @@ export declare class OneBotV11Adapter extends Adapter {
     getQQavatar(qq: string | number): string;
     handleMessage(this: any, message: any): any;
     /**
+     * 处理发送消息
+     */
+    handleReply(message: any): any;
+    /**
      * 关闭连接
      */
     close(): void;

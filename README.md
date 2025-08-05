@@ -21,6 +21,12 @@ create-mz-bot
 ```
 npm i @mz-botjs/adapter-onebotv11
 ```
+默认链接地址
+
+### 反向ws
+```js
+ws://localhost:3144/onebotv11
+```
 # 插件模板
 请在`plugins`文件夹下创建你的插件文件夹
 
@@ -57,6 +63,24 @@ export const help = async (ctx) => {
 export const isMatch = (message: string, regex: RegExp): boolean => {
   return regex.test(message);
 };
+```
+
+# 配置文件
+请参考`mz_config.js`文件
+```js
+
+export default {
+    port: 3144, //server的代码端口
+    bot: [
+        {
+            type: 'onebotv11',
+            config: {
+                url: '/onebotv11', //onebot链接路由
+                enable: true, //是否启用
+            }
+        }
+    ],
+}
 ```
 # 作者
 

@@ -13,7 +13,8 @@ export class OneBotV11Adapter extends Adapter {
         super('onebotv11');
         this.wss = wss;
         this.wss.on('message', async (msg) => {
-            this.handleMessage(msg);
+            this.queue.add(msg);
+            // this.handleMessage(msg);
         })
     }
 
@@ -80,7 +81,7 @@ export class OneBotV11Adapter extends Adapter {
     getQQavatar(qq: string | number) {
         return `https://q1.qlogo.cn/g?b=qq&s=0&nk=${qq}`;
     }
-    handleMessage(this,message: any) {
+    handleMessage(this, message: any) {
         //buffer转字符串
         if (Buffer.isBuffer(message)) {
             message = message.toString('utf-8');
@@ -130,15 +131,17 @@ export class OneBotV11Adapter extends Adapter {
                     anonymous: parsedMessage?.anonymous,
                     reply: null,
                 };
-                e.reply = async (msg) =>{
-                    //判断msg是否数组
-                    if (Array.isArray(msg)) {
-                        await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id, msg)
-                    } else if (msg.constructor === Object) {
-                        await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id, [msg])
-                    } else {
-                        await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id, msg)
-                    }
+                e.reply = async (msg) => {
+                    const message = await this.handleReply(msg)
+                    return await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id,message);
+                    // //判断msg是否数组
+                    // if (Array.isArray(msg)) {
+                    //     await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id, msg)
+                    // } else if (msg.constructor === Object) {
+                    //     await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id, [msg])
+                    // } else {
+                    //     await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id, msg)
+                    // }
                 }
                 logger.info(`[onebotv11][Bot(${parsedMessage.self_id})][receive][${e.type}][QQ(${e.user_id})][${`群${e.group_id}` || "私聊"}]:${e.raw_message}`);
                 for (let callback of this.callbacks) {
@@ -150,6 +153,40 @@ export class OneBotV11Adapter extends Adapter {
             }
 
         }
+    }
+    /**
+     * 处理发送消息
+     */
+    async handleReply(message: any) {
+    
+        //是否数组
+        if (Array.isArray(message)) {
+            return message.map(msg => this.handleReply(msg));
+        } else if (message.constructor === Object) {
+            //如果是对象，判断是否有type属性
+            if (message.type) {
+                //如果是Text类型
+                if (message.type === 'image') {
+                    const file = message.data.file;
+                    //如果是Buffer
+                    if (Buffer.isBuffer(file)){
+                        //转换成base64
+                        message.data.file = `base64://${file.toString('base64')}`
+                    }
+                    return [message]
+                } else {
+                    //其他类型直接返回
+                    return [message];
+                }
+            } else {
+                //如果没有type属性，直接返回
+                return message;
+            }
+        } else {
+            return message;
+        }
+
+
     }
     /**
      * 关闭连接
