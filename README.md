@@ -64,7 +64,15 @@ export const isMatch = (message: string, regex: RegExp): boolean => {
   return regex.test(message);
 };
 ```
+# 发送图片
+```ts
+import { Text } from '@mz-botjs/core'
 
+export const help = async (ctx) => {
+  if(!isMatch(ctx.payload.UserText, /^(#|\/)?你好$/)) return;
+  await ctx.payload.reply(Image('buffer' | 'url'));
+}
+```
 # 配置文件
 请参考`mz_config.js`文件
 ```js
