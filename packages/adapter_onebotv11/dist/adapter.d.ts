@@ -3,6 +3,7 @@ export declare class OneBotV11Adapter extends Adapter {
     private readonly wss;
     private queue;
     private callbacks;
+    private responseHandlers;
     /**
      * @param wss WebSocket服务器实例
      */

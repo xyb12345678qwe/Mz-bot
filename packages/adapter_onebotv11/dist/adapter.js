@@ -5,6 +5,7 @@ export class OneBotV11Adapter extends Adapter {
     wss;
     queue = new MessageQueue(this.handleMessage.bind(this));
     callbacks = [];
+    responseHandlers = new Map(); // 存储响应处理函数
     /**
      * @param wss WebSocket服务器实例
      */
@@ -34,32 +35,17 @@ export class OneBotV11Adapter extends Adapter {
      */
     createSend(action, params, echo, timeout = 5000) {
         return new Promise((resolve, reject) => {
-            // 检查 WebSocket 连接状态
             if (this.wss.readyState !== WebSocket.OPEN) {
                 return reject(new Error('WebSocket 连接未就绪'));
             }
-            // 发送消息
+            this.responseHandlers.set(echo, resolve);
             this.wss.send(JSON.stringify({ action, params, echo }));
-            // 临时消息处理器
-            const messageHandler = (message) => {
-                if (message?.echo === echo) {
-                    cleanup();
-                    resolve(message);
+            setTimeout(() => {
+                if (this.responseHandlers.has(echo)) {
+                    this.responseHandlers.delete(echo);
+                    reject(new Error('请求超时'));
                 }
-            };
-            // 错误处理器
-            const errorHandler = (err) => {
-                cleanup();
-                reject(err);
-            };
-            // 清理函数
-            const cleanup = () => {
-                this.wss.off('message', messageHandler);
-                this.wss.off('error', errorHandler);
-            };
-            // 添加监听器
-            this.wss.on('message', messageHandler);
-            this.wss.on('error', errorHandler);
+            }, timeout);
         });
     }
     sendMessage(message_type, group_id, user_id, message) {
@@ -85,6 +71,11 @@ export class OneBotV11Adapter extends Adapter {
         catch (e) {
             logger.error(`[onebotv11]解析消息失败: ${e.message}`);
             return null;
+        }
+        const echo = message?.echo;
+        if (echo && this.responseHandlers.has(echo)) {
+            this.responseHandlers.get(echo)(message);
+            this.responseHandlers.delete(echo);
         }
         const parsedMessage = message;
         const self_id = parsedMessage.self_id;

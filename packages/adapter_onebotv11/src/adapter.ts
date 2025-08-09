@@ -6,6 +6,7 @@ export class OneBotV11Adapter extends Adapter {
     private readonly wss;
     private queue: MessageQueue<any> = new MessageQueue<string>(this.handleMessage.bind(this))
     private callbacks = []
+    private responseHandlers = new Map<number, (message: any) => void>(); // 存储响应处理函数
     /**
      * @param wss WebSocket服务器实例
      */
@@ -36,38 +37,19 @@ export class OneBotV11Adapter extends Adapter {
      */
     createSend(action: string, params: any, echo: number, timeout = 5000): Promise<any> {
         return new Promise((resolve, reject) => {
-            // 检查 WebSocket 连接状态
             if (this.wss.readyState !== WebSocket.OPEN) {
                 return reject(new Error('WebSocket 连接未就绪'));
             }
 
-            // 发送消息
+            this.responseHandlers.set(echo, resolve);
             this.wss.send(JSON.stringify({ action, params, echo }));
 
-            // 临时消息处理器
-            const messageHandler = (message: any) => {
-                if (message?.echo === echo) {
-                    cleanup();
-                    resolve(message);
+            setTimeout(() => {
+                if (this.responseHandlers.has(echo)) {
+                    this.responseHandlers.delete(echo);
+                    reject(new Error('请求超时'));
                 }
-            };
-
-            // 错误处理器
-            const errorHandler = (err: Error) => {
-                cleanup();
-                reject(err);
-            };
-
-
-            // 清理函数
-            const cleanup = () => {
-                this.wss.off('message', messageHandler);
-                this.wss.off('error', errorHandler);
-            };
-
-            // 添加监听器
-            this.wss.on('message', messageHandler);
-            this.wss.on('error', errorHandler);
+            }, timeout);
         });
     }
     public sendMessage(message_type: string, group_id: number, user_id: number, message: any) {
@@ -93,6 +75,11 @@ export class OneBotV11Adapter extends Adapter {
         catch (e) {
             logger.error(`[onebotv11]解析消息失败: ${e.message}`);
             return null;
+        }
+        const echo = message?.echo;
+        if (echo && this.responseHandlers.has(echo)) {
+            this.responseHandlers.get(echo)(message);
+            this.responseHandlers.delete(echo);
         }
         const parsedMessage = message;
         const self_id = parsedMessage.self_id;
@@ -133,7 +120,7 @@ export class OneBotV11Adapter extends Adapter {
                 };
                 e.reply = async (msg) => {
                     const message = await this.handleReply(msg)
-                    return await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id,message);
+                    return await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id, message);
                     // //判断msg是否数组
                     // if (Array.isArray(msg)) {
                     //     await this.sendMessage(parsedMessage.message_type, parsedMessage.group_id, parsedMessage.user_id, msg)
@@ -158,7 +145,7 @@ export class OneBotV11Adapter extends Adapter {
      * 处理发送消息
      */
     async handleReply(message: any) {
-    
+
         //是否数组
         if (Array.isArray(message)) {
             return message.map(msg => this.handleReply(msg));
@@ -169,7 +156,7 @@ export class OneBotV11Adapter extends Adapter {
                 if (message.type === 'image') {
                     const file = message.data.file;
                     //如果是Buffer
-                    if (Buffer.isBuffer(file)){
+                    if (Buffer.isBuffer(file)) {
                         //转换成base64
                         message.data.file = `base64://${file.toString('base64')}`
                     }
